@@ -27,6 +27,7 @@ const Player = function(marker){
 }
 
 const displayController = (() =>{
+    const board = document.querySelector('.board');
     const cells = document.querySelectorAll('.cell');
     const currentPlayer = document.querySelector('.current-player');
     const winningMessage = document.querySelector('.winning-message');
@@ -38,6 +39,10 @@ const displayController = (() =>{
             gameController.playRound(e.target.dataset.cell);
         })
     })
+    const toggleBoardMarker = (marker) => {
+        board.classList.toggle('x');
+        board.classList.toggle('o');
+    }
     const setCurrentPlayer = (marker) => {
         currentPlayer.textContent = `Current player is ${marker.toUpperCase()}`;
     }
@@ -62,12 +67,14 @@ const displayController = (() =>{
             cell.classList.remove('x');
             cell.classList.remove('o');
         })
+        board.classList.remove('o');
+        board.classList.add('x');
         winningMessage.classList.remove('show');
     }
     restartButton.addEventListener('click',(e) => {
         gameController.restartGame();
     })
-    return {markField,displayWinMessage,resetDisplay,displayDrawMessage,setCurrentPlayer};
+    return {markField,displayWinMessage,resetDisplay,displayDrawMessage,setCurrentPlayer,toggleBoardMarker};
 })();
 
 const gameController = (() => {
@@ -96,7 +103,8 @@ const gameController = (() => {
             currentPlayer = playerX;
         }
         round++;
-        displayController.setCurrentPlayer(currentPlayer.getMarker());
+        displayController.setCurrentPlayer(currentPlayer.getMarker())
+        displayController.toggleBoardMarker();;
     }
     const checkWinner = () => {
         const winConditions = [
